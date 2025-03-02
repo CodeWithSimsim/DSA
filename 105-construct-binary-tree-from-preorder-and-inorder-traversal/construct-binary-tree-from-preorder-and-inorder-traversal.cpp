@@ -11,41 +11,30 @@
  */
 class Solution {
 public:
+    TreeNode* tree(vector<int>&preorder, int spre, int epre, vector<int>&inorder, int sin, int ein, unordered_map<int, int>& mp)
+    {
+        if(spre > epre || sin > ein) return nullptr;
+        TreeNode* node = new TreeNode(preorder[spre]);
+        
+        int ind = mp[node->val];
+        int cnt = ind - sin;
+
+        node->left = tree(preorder, spre+1, spre+cnt, inorder, sin, ind-1, mp);
+        node->right = tree(preorder, spre+cnt+1, epre, inorder, ind+1, ein, mp);
+
+        return node;
+    }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         int n = preorder.size();
         if(n == 0) return nullptr;
 
-        unordered_map<int, int> mp;  // To store inorder indices for quick lookup
-        for(int i = 0; i < n; i++) {
+        unordered_map<int, int>mp;
+        for(int i=0; i<n; i++)
+        {
             mp[inorder[i]] = i;
         }
-
-        TreeNode* root = new TreeNode(preorder[0]); // First node is root
-        stack<TreeNode*> st;
-        st.push(root);
-
-        for(int i = 1; i < n; i++) {
-            TreeNode* node = new TreeNode(preorder[i]);
-            TreeNode* parent = st.top();
-            
-            // Left child case (if the index of new node is smaller in inorder)
-            if(mp[preorder[i]] < mp[parent->val]) {
-                parent->left = node;
-            } 
-            // Right child case
-            else {
-                TreeNode* lastPopped = nullptr;
-                while(!st.empty() && mp[preorder[i]] > mp[st.top()->val]) {
-                    lastPopped = st.top();
-                    st.pop();
-                }
-                lastPopped->right = node;
-            }
-
-            // Push current node to stack
-            st.push(node);
-        }
-
+        TreeNode* root = tree(preorder, 0, n-1, inorder, 0, n-1, mp);
         return root;
+        
     }
 };
