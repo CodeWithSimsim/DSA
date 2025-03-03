@@ -15,6 +15,7 @@ public:
             ms.insert(nums[i]);
             int curMax = *ms.rbegin();
             ans.push_back(curMax);
+            
             auto it = ms.find(nums[start]);
             if (it != ms.end()) {
                 ms.erase(it);
