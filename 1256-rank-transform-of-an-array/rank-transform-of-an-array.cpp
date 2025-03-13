@@ -2,30 +2,25 @@ class Solution {
 public:
     vector<int> arrayRankTransform(vector<int>& arr) {
         int n = arr.size();
-        vector<int>ans(n);
-        multimap<int, int>mp;
-        for(int i =0; i<n; i++)
-        {
-            mp.insert({arr[i], i});
+        vector<int> sortedArr = arr;  // Copy the original array
+        sort(sortedArr.begin(), sortedArr.end());  // Sort the array
+
+        map<int, int> rankMap;
+        int rank = 1;
+
+        // Assign ranks to unique elements
+        for (int num : sortedArr) {
+            if (rankMap.find(num) == rankMap.end()) { // First occurrence of num
+                rankMap[num] = rank++;
+            }
         }
 
-        int pre = mp.begin()->first;
-        int rank =1;
-        for(auto it: mp)
-        {
-            int num = it.first;
-            int ind = it.second;
-            if(num == pre)
-            {
-                ans[ind] = rank;
-            }
-            else
-            {
-                ans[ind] = rank+1;
-                rank ++;
-                pre = num;
-            }
+        // Replace elements in the original array with their ranks
+        vector<int> ans(n);
+        for (int i = 0; i < n; i++) {
+            ans[i] = rankMap[arr[i]];
         }
+        
         return ans;
     }
 };
