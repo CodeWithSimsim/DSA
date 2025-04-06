@@ -4,55 +4,44 @@ public:
         int n = grid.size();
         int m = grid[0].size();
 
-        queue<pair<int, int>>que;
-        vector<vector<int>>vis(n, vector<int>(m, 0));
+        queue<pair<pair<int, int>, int>>que;
+       
         for(int i =0; i<n; i++)
         {
             for(int j =0; j<m; j++)
             {
-                if(grid[i][j] == 1)
+                if(grid[i][j] ==2)
                 {
-                    vis[i][j] =1;
-                }
-                else if(grid[i][j] == 2)
-                {
-                    que.push({i, j});
-                    vis[i][j] =2;
+                    que.push({{i, j}, 0});
+                    grid[i][j] =2;
                 }
             }
         }
 
+        int maxDay =0;
         int dr[4] = {-1, 0, 1, 0};
-        int dc[4] = {0, 1,  0, -1};
+        int dc[4] = {0, -1, 0, 1};
 
-        int cnt = 0;
         while(!que.empty())
         {
-            int s = que.size();
-            bool check = false;
-            for(int i =0; i<s; i++)
+            auto top = que.front();
+            que.pop();
+            int row = top.first.first;
+            int col = top.first.second;
+            int day = top.second;
+
+            maxDay = max(maxDay, day);
+            for(int i =0; i<4; i++)
             {
-                auto top = que.front();
-                que.pop();
-                int crow = top.first;
-                int ccol = top.second;
-
-                // now move in all four direction up, left, right, down
+                int nrow = row + dr[i];
+                int ncol = col + dc[i];
                 
-                for(int i =0; i<4; i++)
+                if(nrow>=0 && nrow <n && ncol >=0 && ncol <m && grid[nrow][ncol] ==1 )
                 {
-                    int nrow = crow + dr[i];
-                    int ncol = ccol + dc[i];
-
-                    if(nrow>=0 && nrow<n && ncol >=0 && ncol <m && vis[nrow][ncol] == 1)
-                    {
-                        vis[nrow][ncol] =2;
-                        que.push({nrow, ncol});
-                        check = true;
-                    }
+                    que.push({{nrow, ncol}, day+1});
+                    grid[nrow][ncol] =2;
                 }
             }
-            if(check) cnt++;
         }
 
         bool isPossible = true;
@@ -60,13 +49,13 @@ public:
         {
             for(int j =0; j<m; j++)
             {
-                if(vis[i][j] == 1)
+                if(grid[i][j] ==1)
                 {
                     isPossible = false;
                     break;
                 }
             }
         }
-        return ((isPossible) ? cnt : -1 );
+        return (!isPossible ? -1 : maxDay);
     }
 };
