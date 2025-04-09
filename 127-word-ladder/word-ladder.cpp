@@ -1,37 +1,32 @@
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        int n = beginWord.size();
-        set<string>st(wordList.begin(), wordList.end());
+        set<string> st(wordList.begin(), wordList.end());
+
         if(st.find(endWord) == st.end()) return 0;
 
-        queue<pair<string, int>>que;
-        que.push({beginWord, 1});
+        queue<pair<string, int>> que;
+        que.push({beginWord, 1});  // start from 1 because beginWord counts
 
-        while(!que.empty())
-        {
-            string str = que.front().first;
-            int len = que.front().second;
+        while(!que.empty()) {
+            auto [curStr, attemp] = que.front();
             que.pop();
 
-            if(str == endWord) return len;
-            for(int i =0;i<n; i++)
-            {
+            if(curStr == endWord) return attemp;
 
-                char oc = str[i];
-                for(char ch = 'a'; ch <='z'; ch++)
-                {
-                    if (ch == oc) continue;
-                    str[i] = ch;
-                    if(st.find(str) != st.end())
-                    {
-                        que.push({str, len+1});
-                        st.erase(str);
+            for(int i = 0; i < curStr.length(); i++) {
+                char original = curStr[i];
+                for(char ch = 'a'; ch <= 'z'; ch++) {
+                    curStr[i] = ch;
+                    if(st.find(curStr) != st.end()) {
+                        que.push({curStr, attemp + 1});
+                        st.erase(curStr);
                     }
                 }
-                str[i] = oc;
+                curStr[i] = original;
             }
         }
-        return 0;
+
+        return 0;  // if endWord is not reachable
     }
 };
