@@ -2,7 +2,7 @@ class Solution {
 public:
     int maxSumDivThree(vector<int>& nums) {
         int n = nums.size();
-        sort(nums.begin(), nums.end(), greater<int>());
+        sort(nums.begin(), nums.end());
         vector<int>rem(n, 0);
         int rsum = 0;
         int cnt1=0, cnt2 =0;
@@ -19,7 +19,7 @@ public:
         if(rsum %3 == 1)
         {
             int red1 =INT_MAX, red2 =INT_MAX;
-            for(int i = n-1; i>=0; i--)
+            for(int i = 0; i<n; i++)
             {
                 if(rem[i] == 1)
                 {
@@ -33,7 +33,7 @@ public:
                 red2 =0;
                 int cnt = 0;
 
-                for(int i = n-1; i>=0; i--)
+                for(int i = 0; i<n; i++)
                 {
                     if(rem[i] == 2)
                     {
@@ -53,7 +53,7 @@ public:
         if(rsum %3 == 2)
         {
             int red1 =INT_MAX, red2 =INT_MAX;
-            for(int i = n-1; i>=0; i--)
+            for(int i = 0; i<n; i++)
             {
                 if(rem[i] == 2)
                 {
@@ -66,7 +66,7 @@ public:
                 red1 =0;
                 int cnt = 0;
 
-                for(int i = n-1; i>=0; i--)
+                for(int i = 0; i<n; i++)
                 {
                     if(rem[i] == 1)
                     {
