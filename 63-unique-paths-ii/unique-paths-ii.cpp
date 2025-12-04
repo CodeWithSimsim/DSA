@@ -1,6 +1,7 @@
 class Solution {
 public:
 
+/*
     int findPath(int m, int n, vector<vector<int>>& grid, vector<vector<int>>& dp)
     {
         if(m < 0 || n < 0) return 0;
@@ -14,13 +15,43 @@ public:
         return dp[m][n] = left + up;
     }
 
+*/
     int uniquePathsWithObstacles(vector<vector<int>>& grid) {
         int row = grid.size();
         int col = grid[0].size();
         vector<vector<int>>dp(row, vector<int>(col, -1));
-        int totalPath = findPath(row-1, col-1, grid, dp);
+        //int totalPath = findPath(row-1, col-1, grid, dp);
 
-        return totalPath;
+        vector<vector<int>>tab(row, vector<int>(col, 0));
+        
+
+        for(int i =0; i<row; i++)
+        {
+            for(int j =0; j<col; j++)
+            {
+                if(grid[i][j] ==1)
+                {
+                    tab[i][j] =0;
+                    continue;
+                }
+                if(i ==0 && j==0)
+                {
+                    tab[0][0] =1;
+                    continue;
+                }
+                
+                int left =0;
+                int up =0;
+                if(j-1 >=0) left = tab[i][j-1];
+                if(i-1 >=0) up = tab[i-1][j];
+
+                tab[i][j] = left + up;
+                
+            }
+        }
+
+        //return totalPath;
+        return tab[row-1][col-1];
 
     }
 };
