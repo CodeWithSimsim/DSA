@@ -4,58 +4,52 @@ public:
         int n = grid.size();
         int m = grid[0].size();
 
-        queue<pair<pair<int, int>, int>>que;
-       
-        for(int i =0; i<n; i++)
-        {
-            for(int j =0; j<m; j++)
-            {
-                if(grid[i][j] ==2)
-                {
-                    que.push({{i, j}, 0});
-                    grid[i][j] =2;
+        queue<pair<int,int>> q;
+        int fresh = 0;
+
+        // Step 1: Push all rotten oranges
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 2) {
+                    q.push({i, j});
                 }
+                if (grid[i][j] == 1)
+                    fresh++;
             }
         }
 
-        int maxDay =0;
+        if (fresh == 0) return 0; // no fresh oranges
+
+        int time = -1;
         int dr[4] = {-1, 0, 1, 0};
-        int dc[4] = {0, -1, 0, 1};
+        int dc[4] = {0, 1, 0, -1};
 
-        while(!que.empty())
-        {
-            auto top = que.front();
-            que.pop();
-            int row = top.first.first;
-            int col = top.first.second;
-            int day = top.second;
+        // BFS
+        while (!q.empty()) {
+            int sz = q.size();
+            time++;
 
-            maxDay = max(maxDay, day);
-            for(int i =0; i<4; i++)
-            {
-                int nrow = row + dr[i];
-                int ncol = col + dc[i];
-                
-                if(nrow>=0 && nrow <n && ncol >=0 && ncol <m && grid[nrow][ncol] ==1 )
-                {
-                    que.push({{nrow, ncol}, day+1});
-                    grid[nrow][ncol] =2;
+            while (sz--) {
+                auto [r, c] = q.front();
+                q.pop();
+
+                for (int k = 0; k < 4; k++) {
+                    int nr = r + dr[k];
+                    int nc = c + dc[k];
+
+                    if (nr >= 0 && nr < n && nc >= 0 && nc < m &&
+                        grid[nr][nc] == 1) {
+
+                        grid[nr][nc] = 2;   // rot the orange
+                        fresh--;
+                        q.push({nr, nc});
+                    }
                 }
             }
         }
 
-        bool isPossible = true;
-        for(int i =0; i<n; i++)
-        {
-            for(int j =0; j<m; j++)
-            {
-                if(grid[i][j] ==1)
-                {
-                    isPossible = false;
-                    break;
-                }
-            }
-        }
-        return (!isPossible ? -1 : maxDay);
+        if (fresh != 0) return -1;
+
+        return time;
     }
 };
